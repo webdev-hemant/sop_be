@@ -16,7 +16,8 @@ app.use(
 app.use(express.json());
 
 app.get("/", (req, res) => res.json({ message: "It's working!" }));
-app.use("/api", authRoutes);
+
+app.use("/api/auth", authRoutes);
 
 const startServer = async () => {
   try {
