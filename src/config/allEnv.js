@@ -5,6 +5,7 @@ const SERVER_PORT = process.env.SERVER_PORT;
 const NODE_ENV = process.env.NODE_ENV;
 const JWT_SECRET = process.env.JWT_SECRET;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const API_GATEWAY_ENDPOINT = process.env.API_GATEWAY_ENDPOINT;
 
 const DB = {
@@ -22,6 +23,7 @@ module.exports = {
   NODE_ENV,
   JWT_SECRET,
   ADMIN_EMAIL,
+  ADMIN_PASSWORD,
   API_GATEWAY_ENDPOINT,
   DB,
 };

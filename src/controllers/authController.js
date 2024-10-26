@@ -2,14 +2,31 @@ const {
   getAllUsers,
   registerUser,
   loginUser,
+  generateAdminToken,
 } = require("../actions/authActions");
-const { extractToken } = require("../utils");
+const globalState = require("../utils/globalState");
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const token = extractToken(req);
-    const users = await getAllUsers(token);
-    res.status(200).json({ total: users.length, users });
+    const adminToken = globalState.get("adminToken");
+    if (adminToken) {
+      getAllUsers(adminToken)
+        .then((resp) => {
+          res.status(200).json({ total: resp.length, users: resp });
+        })
+        .catch(async (err) => {
+          console.log({ err });
+          const token = await generateAdminToken();
+          globalState.set("adminToken", token);
+          const users = await getAllUsers(token);
+          res.status(200).json({ total: users.length, users: users });
+        });
+    } else {
+      const token = await generateAdminToken();
+      globalState.set("adminToken", token);
+      const users = await getAllUsers(token);
+      res.status(200).json({ total: users.length, users: users });
+    }
   } catch (error) {
     console.error(error);
     res

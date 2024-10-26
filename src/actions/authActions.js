@@ -1,3 +1,4 @@
+const { ADMIN_EMAIL, ADMIN_PASSWORD } = require("../config/allEnv");
 const allServices = require("../services/instances");
 
 exports.getAllUsers = async (token) => {
@@ -33,4 +34,17 @@ exports.verifyToken = async (token) => {
     }
   );
   return data;
+};
+
+exports.generateAdminToken = async () => {
+  const body = {
+    usernameOrEmail: ADMIN_EMAIL,
+    password: ADMIN_PASSWORD,
+  };
+  const response = await allServices().authService.post(
+    "/api/auth/login",
+    body
+  );
+  const token = response?.data?.token;
+  return token;
 };
