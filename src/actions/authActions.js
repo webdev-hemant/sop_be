@@ -2,14 +2,14 @@ const { ADMIN_EMAIL, ADMIN_PASSWORD } = require("../config/allEnv");
 const allServices = require("../services/instances");
 
 exports.getAllUsers = async (token) => {
-  const { data } = await allServices(token).authService.get(
+  const { data } = await allServices.authService.get(
     "/api/auth/getAllUsers"
   );
   return data;
 };
 
 exports.registerUser = async (body) => {
-  const { data } = await allServices().authService.post(
+  const { data } = await allServices.authService.post(
     "/api/auth/register",
     body
   );
@@ -17,7 +17,7 @@ exports.registerUser = async (body) => {
 };
 
 exports.loginUser = async (body) => {
-  const { data } = await allServices().authService.post(
+  const { data } = await allServices.authService.post(
     "/api/auth/login",
     body
   );
@@ -25,7 +25,7 @@ exports.loginUser = async (body) => {
 };
 
 exports.verifyToken = async (token) => {
-  const { data } = await allServices().authService.get(
+  const { data } = await allServices.authService.get(
     "/api/auth/getUserDetails",
     {
       headers: {
@@ -41,7 +41,7 @@ exports.generateAdminToken = async () => {
     usernameOrEmail: ADMIN_EMAIL,
     password: ADMIN_PASSWORD,
   };
-  const response = await allServices().authService.post(
+  const response = await allServices.authService.post(
     "/api/auth/login",
     body
   );

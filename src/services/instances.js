@@ -6,24 +6,23 @@ const endpoints = {
   publicPostService: `${API_GATEWAY_ENDPOINT}/publicPostRoutes`,
   s3CloneService: `${API_GATEWAY_ENDPOINT}/s3_clone`,
   instaScrapService: `${API_GATEWAY_ENDPOINT}/insta_scrap`,
+  chatService: `${API_GATEWAY_ENDPOINT}/chat`,
 };
 
-const createService = (baseURL, token) => {
+const createService = (baseURL) => {
   return axios.create({
     baseURL,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
   });
 };
 
-const allServices = (token) => {
+const createAllServices = () => {
   const services = {};
   for (const [key, baseURL] of Object.entries(endpoints)) {
-    services[key] = createService(baseURL, token);
+    services[key] = createService(baseURL);
   }
   return services;
 };
+
+const allServices = createAllServices();
 
 module.exports = allServices;

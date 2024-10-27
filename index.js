@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const sequelize = require("./src/config/db");
 const authRoutes = require("./src/routes/authRoutes");
+const chatRoutes = require("./src/routes/chatRoutes");
 const { SERVER_PORT } = require("./src/config/allEnv");
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.json());
 app.get("/", (req, res) => res.json({ message: "It's working!" }));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/chat", chatRoutes);
 
 const startServer = async () => {
   try {
