@@ -27,7 +27,7 @@ exports.createConversation = async (req, res) => {
 exports.getAllConversations = async (req, res) => {
   try {
     const token = extractToken(req);
-    const data = await getAllConversationsActon(token);
+    const data = await getAllConversationsActon({ token, queries: req.query });
     res.status(200).json(data);
   } catch (error) {
     console.error(error);
@@ -45,9 +45,9 @@ exports.getMessages = async (req, res) => {
   try {
     const conversationId = req.params.conversationId;
     const token = extractToken(req);
-    const data = await getMessagesActions({ conversationId, token });
+    const response = await getMessagesActions({ conversationId, token, queries: req.query });
 
-    res.status(200).json({ total: data.length, data });
+    res.status(200).json(response);
   } catch (error) {
     console.error(error);
     res
