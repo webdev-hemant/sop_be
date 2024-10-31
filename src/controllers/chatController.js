@@ -26,8 +26,8 @@ exports.createConversation = async (req, res) => {
 
 exports.getAllConversations = async (req, res) => {
   try {
-    const token = extractToken(req);
-    const data = await getAllConversationsActon({ token, queries: req.query });
+    const userId = req.user.id;
+    const data = await getAllConversationsActon({ userId, queries: req.query });
     res.status(200).json(data);
   } catch (error) {
     console.error(error);

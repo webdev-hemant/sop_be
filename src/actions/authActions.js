@@ -44,3 +44,11 @@ exports.generateAdminToken = async () => {
   const token = response?.data?.token;
   return token;
 };
+
+exports.getUsersByIds = async (ids) => {
+  const { data } = await allServices.authService.post(
+    "/api/auth/getUsersByIds",
+    { ids }
+  );
+  return data;
+};

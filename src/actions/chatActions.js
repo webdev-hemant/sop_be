@@ -13,13 +13,13 @@ exports.createConversationAction = async ({ user2Id, name, token }) => {
   return data;
 };
 
-exports.getAllConversationsActon = async ({ token, queries }) => {
-  const { data } = await allServices.chatService.get("/api/conversations", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    params: queries,
-  });
+exports.getAllConversationsActon = async ({ userId, queries }) => {
+  const { data } = await allServices.chatService.get(
+    `/api/conversations/${userId}`,
+    {
+      params: queries,
+    }
+  );
   return data;
 };
 
