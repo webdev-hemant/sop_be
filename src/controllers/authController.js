@@ -31,8 +31,11 @@ exports.getAllUsers = async (req, res) => {
     console.error(error);
     res
       .status(500)
-      .json(error.response.data || { message: error.message || "Internal server error" });
-
+      .json(
+        error.response.data || {
+          message: error.message || "Internal server error",
+        }
+      );
   }
 };
 
@@ -55,8 +58,11 @@ exports.register = async (req, res) => {
     console.error(error);
     res
       .status(500)
-      .json(error.response.data || { message: error.message || "Internal server error" });
-
+      .json(
+        error.response.data || {
+          message: error.message || "Internal server error",
+        }
+      );
   }
 };
 
@@ -71,10 +77,14 @@ exports.login = async (req, res) => {
 
     res.send(data);
   } catch (error) {
-    console.error(error);
+    console.error({ loginError: error.message });
     res
       .status(500)
-      .json(error.response.data || { message: error.message || "Internal server error" });
+      .json(
+        error.response.data || {
+          message: error.message || "Internal server error",
+        }
+      );
   }
 };
 

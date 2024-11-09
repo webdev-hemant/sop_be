@@ -8,7 +8,7 @@ const getUserDetails = async (req, res, next) => {
     req.user = data;
     next();
   } catch (error) {
-    res.status(error.status).json({ error: error.response.statusText });
+    res.status(error.status).json({ error: error?.response?.statusText || error.message });
   }
 };
 
