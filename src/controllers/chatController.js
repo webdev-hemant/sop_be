@@ -26,12 +26,15 @@ exports.createConversation = async (req, res) => {
 exports.getAllConversations = async (req, res) => {
   try {
     const userId = req.user.id;
+    const userFullName = `${req.user.firstName} ${req.user.lastName}`;
+    
+    // Fetch conversations
     const { data: conversations } = await getAllConversationsActon({
       userId,
       queries: req.query,
     });
 
-    // Collect unique user IDs and map conversations by ID
+    // Extract unique user IDs and map conversation IDs to users
     const uniqueUserIds = new Set();
     const conversationsMap = new Map();
 
@@ -41,30 +44,48 @@ exports.getAllConversations = async (req, res) => {
       conversationsMap.set(id, { conId: id, userId: otherUserId });
     });
 
+    // Fetch user details
     const users = await getUsersByIds([...uniqueUserIds]);
-
-    // Create a map of user details by user ID
     const userDetailsMap = Object.fromEntries(
       users.map((user) => [user.id, user])
     );
 
-    // Enrich conversations with user details
+    // Function to format messages with user details
+    const formatMessages = (messages, userDetail) => {
+      return messages.map((message) => {
+        const formattedMessage = {
+          ...message,
+          message: message.content,
+          name: message.senderId === userId ? userFullName : `${userDetail?.firstName} ${userDetail?.lastName}`,
+        };
+        delete formattedMessage.content;
+        return formattedMessage;
+      });
+    };
+
+    // Enrich conversations with user details and formatted messages
     const enrichedConversations = conversations
       .map((convo) => {
-        const userDetail =
-          userDetailsMap[conversationsMap.get(convo.id)?.userId];
-        return userDetail ? { ...convo, userDetails: userDetail } : null;
+        const userDetail = userDetailsMap[conversationsMap.get(convo.id)?.userId];
+        if (!userDetail) return null;
+
+        const { Messages, ...restConvo } = convo;
+        const formattedMessages = Messages ? formatMessages(Messages, userDetail) : [];
+
+        return {
+          ...restConvo,
+          messages: formattedMessages,
+          userDetails: userDetail,
+        };
       })
       .filter(Boolean);
 
     res.status(200).json(enrichedConversations);
   } catch (error) {
     console.error(error);
-    res.status(500).json(
-      error.response.data || {
-        message: error.message || "Internal server error",
-      }
-    );
+    res.status(500).json({
+      message: error.response?.data || error.message || "Internal server error",
+    });
   }
 };
 
