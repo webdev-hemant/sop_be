@@ -27,6 +27,8 @@ exports.getAllConversations = async (req, res) => {
   try {
     const userId = req.user.id;
     const userFullName = `${req.user.firstName} ${req.user.lastName}`;
+    const user1Avatar = "https://images.freeimages.com/images/large-previews/971/basic-shape-avatar-1632968.jpg?fmt=webp&h=350";
+    const user2Avatar = "https://images.freeimages.com/images/large-previews/fdd/man-avatar-1632964.jpg?fmt=webp&h=350";
     
     // Fetch conversations
     const { data: conversations } = await getAllConversationsActon({
@@ -57,6 +59,7 @@ exports.getAllConversations = async (req, res) => {
           ...message,
           message: message.content,
           name: message.senderId === userId ? userFullName : `${userDetail?.firstName} ${userDetail?.lastName}`,
+          avatar: message.senderId === userId ? user1Avatar : user2Avatar
         };
         delete formattedMessage.content;
         return formattedMessage;
@@ -69,11 +72,13 @@ exports.getAllConversations = async (req, res) => {
         const userDetail = userDetailsMap[conversationsMap.get(convo.id)?.userId];
         if (!userDetail) return null;
 
-        const { Messages, ...restConvo } = convo;
+        const { Messages, name, ...restConvo } = convo;
         const formattedMessages = Messages ? formatMessages(Messages, userDetail) : [];
 
         return {
           ...restConvo,
+          name:`${userDetail.firstName} ${userDetail.lastName}`,
+          avatar: "https://images.freeimages.com/images/large-previews/d1f/lady-avatar-1632967.jpg?fmt=webp&h=350",
           messages: formattedMessages,
           userDetails: userDetail,
         };
